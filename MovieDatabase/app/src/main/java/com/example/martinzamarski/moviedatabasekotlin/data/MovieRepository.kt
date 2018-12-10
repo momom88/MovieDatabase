@@ -19,7 +19,8 @@ import javax.inject.Inject
 
 class MovieRepository @Inject constructor(
     private val apiInterface: ApiInterface,
-    private val movieDao: MovieDao){
+    private val movieDao: MovieDao,
+    private val appExecutors: AppExecutors){
 
     //the method download the current data from api or load from database
     fun getMovieList(sortOrder: Int): LiveData<List<Movie>> {
@@ -74,6 +75,9 @@ class MovieRepository @Inject constructor(
 
 
     fun saveMovieToDatabase(movie: Movie) {
+        appExecutors.diskIO().execute {
+            movieDao.insertMovie(movie)
+        }
     }
 }
 
