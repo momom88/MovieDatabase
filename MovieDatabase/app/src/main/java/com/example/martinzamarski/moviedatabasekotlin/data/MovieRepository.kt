@@ -3,6 +3,7 @@ package com.example.martinzamarski.moviedatabasekotlin.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import android.util.Log
+import com.example.martinzamarski.moviedatabasekotlin.AppExecutors
 import com.example.martinzamarski.moviedatabasekotlin.util.MOVIE_POPULAR
 import com.example.martinzamarski.moviedatabasekotlin.util.MOVIE_TOP_RATED
 import com.example.martinzamarski.moviedatabasekotlin.data.api.ApiInterface
@@ -71,8 +72,8 @@ class MovieRepository @Inject constructor(
         return data
     }
 
+
     fun saveMovieToDatabase(movie: Movie) {
-        movieDao.insertMovie(movie)
     }
 }
 

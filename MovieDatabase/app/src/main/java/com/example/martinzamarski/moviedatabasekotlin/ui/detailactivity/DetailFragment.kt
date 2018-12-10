@@ -83,7 +83,7 @@ class DetailFragment : Fragment(), MovieInterface, Injectable {
 
     override fun onClick(movie: Movie) {
         Log.i("test" ,"onClickFavorites")
-        detailViewModel.setMovie(movie)
+        //   detailViewModel.setMovie(movie)
         Toast.makeText(
             context, resources.getString(R.string.saved_to_favorites),
             Toast.LENGTH_LONG
