@@ -1,0 +1,93 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'androidx.navigation.safeargs'
+
+android {
+    compileSdkVersion 28
+    dataBinding {
+        enabled = true
+    }
+    defaultConfig {
+        applicationId "com.example.martinzamarski.moviedatabasekotlin"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    androidExtensions {
+        experimental = true
+    }
+
+    kapt {
+        generateStubs = true
+    }
+}
+
+dependencies {
+    //android libs
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+
+    //noinspection GradleCompatible
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    //dagger2
+    implementation "com.google.dagger:dagger-android:${rootProject.ext.dagger2Version}"
+    kapt "com.google.dagger:dagger-compiler:${rootProject.ext.dagger2Version}"
+    kapt "com.google.dagger:dagger-android-processor:${rootProject.ext.dagger2Version}"
+    implementation "com.google.dagger:dagger:${rootProject.ext.dagger2Version}"
+    implementation "com.google.dagger:dagger-android-support:${rootProject.ext.dagger2Version}"
+
+    //Room
+    implementation 'androidx.room:room-runtime:2.1.0-alpha03'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha03'
+    //Lifecycle
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:${rootProject.ext.retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-moshi:${rootProject.ext.moshiConverterVersion}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${rootProject.ext.rxJavaAdapterVersion}"
+    implementation "com.squareup.retrofit2:converter-gson:${rootProject.ext.rxJavaAdapterVersion}"
+
+    // Picasso
+    implementation "com.squareup.picasso:picasso:${rootProject.ext.picasso_version}"
+
+    //RecyclerView
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha01'
+
+    //CardView
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    //Navigation
+    implementation "android.arch.navigation:navigation-fragment-ktx:${rootProject.ext.nav_version}"
+    implementation "android.arch.navigation:navigation-ui-ktx:${rootProject.ext.nav_version}"
+
+    // optional - Test helpers
+    // this library depends on the Kotlin standard library
+    androidTestImplementation "android.arch.navigation:navigation-testing:${rootProject.ext.nav_version}"
+
+    //test
+    testImplementation "junit:junit:${rootProject.ext.junitVersion}"
+    androidTestImplementation 'androidx.test:runner:1.1.1-beta01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1-beta01'
+    implementation "com.google.android.material:material:1.0.0"
+}

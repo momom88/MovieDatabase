@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/nav_graph"
+            app:startDestination="@id/movieFragment">
+
+    <fragment android:id="@+id/movieFragment"
+              android:name="com.example.martinzamarski.moviedatabasekotlin.ui.movieslist.MoviesListFragment"
+              android:label="MoviesListFragment"
+    >
+        <action android:id="@+id/show_detail_fragment"
+                app:destination="@id/detailMovieFragment"
+                app:enterAnim="@anim/slide_out_left"
+                app:exitAnim="@anim/slide_out_right"
+                app:popEnterAnim="@anim/slide_in_right"
+                app:popExitAnim="@anim/slide_out_left"/>
+    </fragment>
+    <fragment android:id="@+id/detailMovieFragment"
+              android:name="com.example.martinzamarski.moviedatabasekotlin.ui.detailactivity.DetailFragment"
+              android:label="DetailFragment"
+    >
+        <action android:id="@+id/action_detailMovieFragment_to_movieFragment" app:destination="@id/movieFragment"/>
+    </fragment>
+    <fragment android:id="@+id/aboutFragment"
+              android:name="com.example.martinzamarski.moviedatabasekotlin.ui.about.AboutFragment"
+              android:label="AboutFragment">
+        <action android:id="@+id/action_aboutFragment2_to_movieFragment" app:destination="@id/movieFragment"/>
+    </fragment>
+</navigation>

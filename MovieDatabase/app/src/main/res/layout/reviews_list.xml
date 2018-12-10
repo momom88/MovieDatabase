@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+                name="reviews"
+                type="com.example.martinzamarski.moviedatabasekotlin.model.Reviews"/>
+    </data>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dp16">
+
+        <TextView
+                android:id="@+id/reviews_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{reviews.author}"
+                android:textStyle="bold"
+                style="@style/normalText"
+                tools:text="Author name: bla bla" />
+
+        <TextView
+                android:id="@+id/reviews_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{reviews.content}"
+                style="@style/normalText"
+                tools:text="Author name: bla blaaa" />
+    </LinearLayout>
+</layout>

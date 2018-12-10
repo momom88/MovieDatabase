@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+            <import type="java.lang.Float"/>
+        <variable
+                name="movie"
+                type="com.example.martinzamarski.moviedatabasekotlin.model.Movie"/>
+
+        <variable
+        name="clickMovieFavorite"
+        type="com.example.martinzamarski.moviedatabasekotlin.ui.MovieInterface" />
+    </data>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#424242">
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/dp10">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                <androidx.cardview.widget.CardView
+                        android:id="@+id/card_view_poster"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="@color/colorPrimary"
+                        app:cardCornerRadius="10dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp10">
+
+                        <ImageView
+                                android:id="@+id/poster"
+                                android:layout_width="200dp"
+                                android:layout_height="290dp"
+                                tools:src="@drawable/test"
+                                app:layout_constraintStart_toStartOf="parent"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                android:layout_marginBottom="8dp"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <TextView
+                                android:id="@+id/release_date_header"
+                                style="@style/headerText"
+                                android:text="@string/header_release_date"
+                                app:layout_constraintStart_toEndOf="@+id/poster"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintTop_toTopOf="@+id/poster"/>
+
+                        <TextView
+                                android:id="@+id/release_date_content"
+                                style="@style/normalText"
+                                android:text="@{movie.releaseDate}"
+                                android:textSize="@dimen/textSize_normal"
+                                tools:text="25.10.2015"
+                                app:layout_constraintStart_toEndOf="@+id/poster"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintTop_toBottomOf="@+id/release_date_header"/>
+
+                        <TextView
+                                android:id="@+id/vote_average_header"
+                                style="@style/headerText"
+                                android:text="@string/header_vote_average"
+                                app:layout_constraintStart_toEndOf="@+id/poster" android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintTop_toBottomOf="@+id/release_date_content"/>
+
+                        <TextView
+                                android:id="@+id/vote_average_content"
+                                style="@style/normalText"
+                                android:text="@{Float.toString(movie.voteAverage)}"
+                                android:textSize="@dimen/textSize_small"
+                                tools:text="2.5"
+                                app:layout_constraintStart_toEndOf="@+id/poster"
+                                android:layout_marginStart="8dp"
+                                app:layout_constraintTop_toBottomOf="@+id/vote_average_header"
+                                android:layout_marginTop="8dp"/>
+                        <!--android:text="@{movie.getVoteAverage().toString()}"-->
+
+                        <TextView
+                                android:id="@+id/overview_header"
+                                style="@style/headerText"
+                                android:text="@string/header_overview"
+                                app:layout_constraintStart_toEndOf="@+id/poster"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintTop_toBottomOf="@+id/vote_average_content"/>
+
+                        <TextView
+                                android:id="@+id/overview_content"
+                                style="@style/normalText"
+                                android:text="@{movie.overview}"
+                                tools:text="When a young nun at a cloistered abbey in Romania takes her own
+                                     life, a priest with a haunted past and a novitiate on the threshold of her
+                                     final vows are sent by the Vatican to investigate. Together they uncover
+                                     the order’s unholy secret. Risking not only their
+                                        "
+                                app:layout_constraintStart_toEndOf="@+id/poster"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintTop_toBottomOf="@+id/overview_header"/>
+
+                        <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() ->  clickMovieFavorite.onClick(movie)}"
+                        android:src="@drawable/ic_favorite_black_48dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/saved_to_favorites"/>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:cardBackgroundColor="@color/colorPrimary"
+                        app:cardCornerRadius="@dimen/dp10">
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:orientation="vertical">
+
+                        <TextView
+                                android:id="@+id/reviews_header"
+                                style="@style/headerText"
+                                android:layout_marginTop="10dp"
+                                android:text="@string/reviews_header"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recycler_view_detail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+</layout>

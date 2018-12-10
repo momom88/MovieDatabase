@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">The Movie DB</string>
+    <string name="movie_id">MOVIE_ID</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="header_title">Title</string>
+    <string name="header_vote_average">Rating</string>
+    <string name="header_release_date">Release date</string>
+    <string name="header_overview">Overview</string>
+    <string name="button_retry">RETRY</string>
+    <string name="not_available">Not available</string>
+
+    <string name="popular_movie">Popular Movie</string>
+    <string name="top_rated_movie">Top Rated Movie</string>
+
+    <string name="no_internet">Check Internet Connection</string>
+    <string name="favorite_movies">Favorite Movies</string>
+
+    <string name="saved_to_favorites">Saved in favorites</string>
+    <string name="reviews_header">Reviews</string>
+    <string name="the_movie_db">The Movie DB</string>
+    <string name="movie_image">Movie Image</string>
+    <string name="rules">Rules</string>
+    <string name="about">About</string>
+    <string name="about_header">About</string>
+    <string name="about_text">The Movie Database (TMDb) is a community built movie and TV database.
+        Every piece of data has been added by our amazing community dating back to 2008.
+        TMDb\'s strong international focus and breadth of data is largely unmatched and something we\'re incredibly
+        proud of. Put simply, we live and breathe community and that\'s precisely what makes us different.
+    </string>
+    <string name="favorites_button">Favorites Button</string>
+    <string name="poster_image_film">Poster Image Film</string>
+    <string name="delete_movie">Delete movie</string>
+</resources>
