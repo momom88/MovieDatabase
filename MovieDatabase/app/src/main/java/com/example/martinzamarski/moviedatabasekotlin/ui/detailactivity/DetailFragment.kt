@@ -23,6 +23,8 @@ import com.example.martinzamarski.moviedatabasekotlin.util.IMAGEURL
 import com.example.martinzamarski.moviedatabasekotlin.util.MOVIE_ID
 import com.example.martinzamarski.moviedatabasekotlin.util.autoCleared
 import com.squareup.picasso.Picasso
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
 /**
@@ -37,6 +39,8 @@ class DetailFragment : Fragment(), MovieInterface, Injectable {
     private var mBinding by autoCleared<FragmentDetailBinding>()
 
     private var mAdapter by autoCleared<ReviewsAdapter>()
+
+    private val compositeDisposable by lazy { CompositeDisposable() }
 
     private lateinit var detailViewModel: DetailViewModel
 
@@ -56,21 +60,45 @@ class DetailFragment : Fragment(), MovieInterface, Injectable {
         super.onActivityCreated(savedInstanceState)
         @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         mMovie = arguments!!.getParcelable(MOVIE_ID)
-        Log.i("test", "detailfragment" + mMovie.title)
+        detailViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailViewModel::class.java)
         mBinding.recyclerViewDetail.layoutManager = LinearLayoutManager(context)
         setupViewModel(mMovie)
         setMovieDataToBinding(mMovie)
     }
 
     private fun setupViewModel(movie: Movie) {
-        detailViewModel =
-                ViewModelProviders.of(this, viewModelFactory).get(DetailViewModel::class.java)
-        detailViewModel.getReviews(movie).observe(this, Observer<List<Reviews>> { it ->
-            it?.let {
-                mAdapter = ReviewsAdapter(it)
-                mBinding.recyclerViewDetail.adapter = mAdapter
-            }
-        })
+        compositeDisposable.add(
+            detailViewModel.getReviews(movie.id)
+                .subscribeBy(
+                    onNext = {
+                        mBinding.loadingIndicator.visibility = View.GONE
+                        mAdapter = ReviewsAdapter(it)
+                        mBinding.recyclerViewDetail.adapter = mAdapter
+                    },
+                    onError = {
+                        mBinding.loadingIndicator.visibility = View.GONE
+                        Toast.makeText(
+                            context, resources.getString(R.string.movie_error_message) + it,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
+        )
+    }
+
+    //Click to save favorite button
+    override fun onClick(movie: Movie) {
+        compositeDisposable.add(
+            detailViewModel.saveToFavorite(movie)
+                .subscribeBy(
+                    onSuccess = {
+                        Toast.makeText(context, resources.getString(R.string.saved_to_favorites), Toast.LENGTH_LONG).show()
+                    },
+                    onError = {
+                        Toast.makeText(context, resources.getString(R.string.notSaved_to_favorites), Toast.LENGTH_LONG).show()
+                    }
+
+                )
+        )
     }
 
     private fun setMovieDataToBinding(movie: Movie) {
@@ -81,13 +109,9 @@ class DetailFragment : Fragment(), MovieInterface, Injectable {
             .into(mBinding.poster)
     }
 
-    override fun onClick(movie: Movie) {
-        Log.i("test" ,"on Click Saved")
-          detailViewModel.setMovie(movie)
-        Toast.makeText(
-            context, resources.getString(R.string.saved_to_favorites),
-            Toast.LENGTH_LONG
-        ).show()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        compositeDisposable.clear()
     }
 }
 

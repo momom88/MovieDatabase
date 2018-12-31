@@ -6,7 +6,6 @@ import javax.inject.Inject
 import com.example.martinzamarski.moviedatabasekotlin.di.AppInjector
 
 import android.app.Application
-import android.util.Log
 import dagger.android.HasActivityInjector
 
 
@@ -16,7 +15,6 @@ class MovieApp : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
-        Log.i("test", " movie app buildConfig")
         AppInjector.init(this)
     }
 

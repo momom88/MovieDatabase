@@ -1,26 +1,20 @@
 package com.example.martinzamarski.moviedatabasekotlin.ui.detailactivity
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.martinzamarski.moviedatabasekotlin.data.MovieRepository
 import com.example.martinzamarski.moviedatabasekotlin.model.Movie
 import com.example.martinzamarski.moviedatabasekotlin.model.Reviews
+import com.example.martinzamarski.moviedatabasekotlin.util.SchedulerProvider
+import io.reactivex.Observable
 import javax.inject.Inject
 
 
-class DetailViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+class DetailViewModel @Inject constructor(private val movieRepository: MovieRepository, private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
-    private lateinit var mReviews: LiveData<List<Reviews>>
-    private lateinit var mMovie: Movie
+    fun getReviews(id: Int): Observable<List<Reviews>> = movieRepository.getReviews(id)
+        .compose(schedulerProvider.getSchedulersForObservable())
 
-//        the call to repository method to display the current data according to the user's request
-    fun getReviews(movie: Movie): LiveData<List<Reviews>> {
-        mMovie = movie
-        mReviews = movieRepository.getReviewsFromApi(movie.id)
-        return mReviews
+    @Suppress("HasPlatformType")
+    fun saveToFavorite(movie: Movie) = movieRepository.saveMovie(movie)
+                .compose(schedulerProvider.getSchedulersForSingle())
     }
-
-    fun setMovie(movie: Movie) {
-        movieRepository.saveMovieToDatabase(movie)
-    }
-}

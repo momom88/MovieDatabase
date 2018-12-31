@@ -1,15 +1,15 @@
 package com.example.martinzamarski.moviedatabasekotlin.ui.movieslist
 
-import androidx.lifecycle.Observer
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.preference.PreferenceManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import com.example.martinzamarski.moviedatabasekotlin.R
@@ -18,6 +18,8 @@ import com.example.martinzamarski.moviedatabasekotlin.di.Injectable
 import com.example.martinzamarski.moviedatabasekotlin.model.Movie
 import com.example.martinzamarski.moviedatabasekotlin.ui.MovieInterface
 import com.example.martinzamarski.moviedatabasekotlin.util.*
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
 /**
@@ -33,6 +35,8 @@ class MoviesListFragment : Fragment(), MovieInterface, Injectable {
 
     private var mAdapter by autoCleared<MoviesListAdapter>()
 
+    private val compositeDisposable by lazy { CompositeDisposable() }
+
     private lateinit var moviesListViewModel: MoviesListViewModel
 
 
@@ -47,44 +51,40 @@ class MoviesListFragment : Fragment(), MovieInterface, Injectable {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        loadingIndicator()
+        moviesListViewModel =
+                ViewModelProviders.of(this, viewModelFactory).get(MoviesListViewModel::class.java)
         landOrPortable()
         setHasOptionsMenu(true)
         sortOrderMovie()
     }
 
-    private fun setupViewModel(sortOrder: Int) {
-        moviesListViewModel =
-                ViewModelProviders.of(this, viewModelFactory).get(MoviesListViewModel::class.java)
-        moviesListViewModel.getMovie(sortOrder).observe(this, Observer<List<Movie>> { it ->
-            it?.let {
-                mAdapter = MoviesListAdapter(this, it)
-                mBinding.recyclerView.adapter = mAdapter
-                loadData()
-            }
-
-        })
+    private fun setupViewModel(sortOrder: String) {
+        compositeDisposable.add(
+            moviesListViewModel.getMovie(sortOrder)
+                .subscribeBy(
+                    onNext = {
+                        mBinding.loadingIndicator.visibility = View.GONE
+                        mBinding.recyclerView.visibility = View.VISIBLE
+                        Log.e("setupViewModel", "movieResult")
+                        mAdapter = MoviesListAdapter(this, it)
+                        mBinding.recyclerView.adapter = mAdapter
+                    },
+                    onError = {
+                        mBinding.loadingIndicator.visibility = View.GONE
+                        Log.e("setupViewModel", "movieError")
+                        Toast.makeText(
+                            context, resources.getString(R.string.movie_error_message) + it,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
+        )
     }
 
-    private fun loadingIndicator() {
-        mBinding.loadingIndicator.visibility = View.VISIBLE
-        mBinding.recyclerView.visibility = View.GONE
-    }
-
-    private fun loadData() {
-        mBinding.loadingIndicator.visibility = View.GONE
-        mBinding.recyclerView.visibility = View.VISIBLE
-    }
-
-    /**
-     * set the number of the image in the row
-     */
     private fun landOrPortable() {
 //         Configuration Landscape or Portable
         val row = resources.getInteger(R.integer.row)
         mBinding.recyclerView.layoutManager = GridLayoutManager(context, row)
     }
-
 
     override fun onClick(movie: Movie) {
         Log.i("test", "onClick " + movie.title)
@@ -93,12 +93,11 @@ class MoviesListFragment : Fragment(), MovieInterface, Injectable {
         navController().navigate(R.id.detailMovieFragment, args)
     }
 
-    /**
-     * This method initialize the contents of the Activity's options menu.
-     *
-     * @param menu
-     * @return
-     */
+    override fun onDestroyView() {
+        compositeDisposable.clear()
+        super.onDestroyView()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -124,26 +123,21 @@ class MoviesListFragment : Fragment(), MovieInterface, Injectable {
         return super.onOptionsItemSelected(item)
     }
 
-    /**
-     * This method of saving the selected order to share preference
-     *
-     * @param sortOrder
-     */
-    private fun sharedPreferencesSave(sortOrder: Int) {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val editor = preferences.edit()
-        editor.putInt(SORT_ORDER_KEY, sortOrder)
-        editor.apply()
+    private fun sharedPreferencesSave(sortOrder: String) {
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with(sharedPref.edit()) {
+            putString(SORT_ORDER_KEY, sortOrder)
+            apply()
+        }
     }
 
     private fun sortOrderMovie() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val sortOrder = preferences.getInt(SORT_ORDER_KEY, -1)
+        val sharePref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        val sortOrder = sharePref.getString(SORT_ORDER_KEY, "")
         when (sortOrder) {
             MOVIE_POPULAR -> setupViewModel(sortOrder)
             MOVIE_TOP_RATED -> setupViewModel(sortOrder)
-            //        }else if (sortOrder == MOVIE_FAVORITE){
-            //            setupViewModel(sortOrder);
+            MOVIE_FAVORITE -> setupViewModel(sortOrder)
             else -> setupViewModel(MOVIE_TOP_RATED)
         }
     }

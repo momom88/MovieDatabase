@@ -9,6 +9,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="2.5dp"
@@ -16,6 +17,7 @@
 
             <ProgressBar
                     android:id="@+id/loading_indicator"
+                    android:visibility="visible"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"/>

@@ -39,8 +39,11 @@ ext {
     rxJavaAdapterVersion = "2.3.0"
     rxAndroidVersion = "2.1.0"
     rxJava2Version = "2.1.0"
+    rxkotlinVersion = "2.1.0"
     picasso_version = "2.71828"
     nav_version = "1.0.0-alpha07"
+    room_version = "2.1.0-alpha03"
+
 
 
     //test
