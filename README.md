@@ -5,6 +5,7 @@
 * Dagger2
 * RxJava/Kotlin/Android
 * Retrofit2
+* Gson
 * Navigation
 * Picasso
 * CardView
