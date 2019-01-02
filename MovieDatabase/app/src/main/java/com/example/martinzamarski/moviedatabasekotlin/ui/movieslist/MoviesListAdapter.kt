@@ -37,7 +37,7 @@ class MoviesListAdapter (private val mClickRecipeInterface: MovieInterface, priv
 
         fun imageView(movie: Movie){
             val widthImageMovie = 750
-            val heightImageMovie = 1000
+            val heightImageMovie = 1035
             val urlImage = IMAGEURL + movie.posterPath
             Picasso.get()
                 .load(urlImage)
